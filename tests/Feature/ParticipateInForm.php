@@ -16,8 +16,7 @@ class ParticipateInFormTest extends TestCase
 
 		$thread = factory('App\Thread')->create();
 
-		// $reply = factory('App\Reply')->make();
-		$this->post('/threads/'.$thread->id.'/repiles', $reply->toArray());
+		$this->post('/threads/'. $thread->id .'/repiles', $reply->toArray());
 
 		$this->get($thread->path())->assertSee($reply->body);
 		

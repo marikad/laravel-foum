@@ -19,6 +19,17 @@ class ThreadsTest extends TestCase
      $this->thread = factory('App\Thread')->create();
  }
 
+ public function test_a_thread_can_make_a_string_path() 
+ {
+ 	$thread = create('App\Thread');
+
+ 	// $this->assertEquals('/threads/' . $thread->channel->slug . '/' . $thread->id, $thread->path());
+
+ 	$this->assertEquals(
+ 			"/threads/{$thread->channel->slug}/{$thread->id}", $thread->path()
+ 		);
+ }
+
  /**
  * A user can browse threads
  */
@@ -32,10 +43,10 @@ class ThreadsTest extends TestCase
     
  }
 
- public function test_a_user_can_browse_a_singke_thread() 
+ public function test_a_user_can_browse_a_single_thread() 
  {
        
-      $response = $this->get('/threads/' . $this->thread->id);
+      $response = $this->get('/threads/' . $this->thread->channel . '/' . $this->thread->id);
 
      $response->assertSee($this->thread->title);
  }
@@ -45,7 +56,7 @@ class ThreadsTest extends TestCase
      $reply = factory('App\Reply')
      		->create(['thread_id' => $this->thread->id]);
 
- 		$response = $this->get('/threads/' . $this->thread->id)
+ 		$response = $this->get('/threads/' . $this->thread->channel . '/' . $this->thread->id)
  	                 ->assertSee($reply->body);
  }
 

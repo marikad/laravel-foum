@@ -14,8 +14,10 @@ class ParticipateInFormTest extends TestCase
 
 public function test_unauthenticated_users_may_not_add_replies() 
 {
+	   	$this->withExceptionHandling();
 
-	$this->post('/threads/1/replies', []);
+	$this->post('/threads/some-channel/1/replies', [])
+		->assertRedirect('/login');
 
 
 }
@@ -35,6 +37,22 @@ public function test_unauthenticated_users_may_not_add_replies()
 
 		$this->get($thread->path())->assertSee($reply->body);
 		
+	}
+
+
+	public function test_a_reply_requires_a_body() 
+	{
+		$this->withExceptionHandling()->signedIn();
+
+
+		$thread = create('App\Thread');
+
+		$reply = make('App\Reply', ['body' => null]);
+
+		$this->post($thread->path() . '/replies', $reply->toArray())
+			->assertSessionHasErrors('body');
+
+
 	}
 
 
