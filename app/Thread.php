@@ -8,6 +8,22 @@ class Thread extends Model
 {
 	protected $guarded = [];
 
+    protected $with = ['owner', 'channel'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+
+
+    // static::addGlobalScope('owner', function ($builder) {
+    //         $builder->with('owner');
+    //     });
+    }
+
 	
       public function path()
     {
@@ -33,5 +49,10 @@ class Thread extends Model
     public function channel() 
     {
     	return $this->belongsTo(Channel::class);
+    }
+
+    public function scopeFilter($query, $filters) 
+    {
+        return $filters->apply($query);
     }
 }

@@ -1,46 +1,69 @@
 @extends('layouts.app')
- 
+
 @section('content')
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                <div class="panel panel-default">
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
                 <div class="panel-heading">
 
                     <a href="">{{$thread->owner->name . " "}}</a>posted:
                     {{ $thread->title }}
                 </div>
- 
-                    <div class="panel-body">
-                        {{ $thread->body }}
-                    </div>
-                </div>
+
+            <div class="panel-body">
+                {{ $thread->body }}
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8 col-md-offset-2">
-                @foreach($thread->replies as $reply)
-                    @include('threads.reply')
-                @endforeach
-            </div>
-        </div>
+         </div>
+
+       
+
+        @foreach($replies as $reply)
+            @include('threads.reply')
+        @endforeach
+
+        {{$replies->links()}}
 
         @if(auth()->check())
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                     <form method="POST" action="{{$thread->path() . '/replies'}}">
-                        {{csrf_field()}}
 
-                        <div class="form-group">
-                            <textarea name="body" id="body" rows="5" class="form-control" placeholder="Have something to say..."></textarea>
-                        </div>
-                        
-                    <button type="submit" class="btn btn-default">Post</button>
-                    </form>
+            <form method="POST" action="{{$thread->path() . '/replies'}}">
+            {{csrf_field()}}
+
+<div class="form-group">
+    <textarea name="body" id="body" rows="5" class="form-control" placeholder="Have something to say..."></textarea>
+</div>
+
+    <button type="submit" class="btn btn-default">Post</button>
+</form>
+
+@else
+    <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>
+@endif
+        </div>
+        <div class="col-md-4">
+             <div class="panel panel-default">
+                <div class="panel-heading">
+
                 </div>
+
+            <div class="panel-body">
+                <p>
+                   
+
+                    @if(!empty($thread->replies_count))
+                     This thread was created {{$thread->created_at->diffForHumans()}}
+                    by <a href="#">{{$thread->owner->name}}</a> and
+                    currently has {{$thread->replies_count}} {{str_plural('comment', $thread->replies_count)}}.
+
+                    @else     
+                    This thread was created {{$thread->created_at->diffForHumans()}}
+                    by <a href="#">{{$thread->owner->name}}</a>
+                    @endif
+                </p>
             </div>
-        @else
-            <p class="text-center">Please <a href="{{ route('login') }}">sign in</a> to participate in this discussion.</p>
-        @endif
+         </div>
+        </div>
+
     </div>
+</div>
 @endsection
