@@ -8,21 +8,30 @@
     <small>Since {{$profileUser->created_at->diffForHumans()}}</small>
 </div>
 
-@foreach($profileUser->threads as $thread)
+@foreach($threads as $thread)
 
 <div class="panel panel-default">
                 <div class="panel-heading">
 
-                    <a href="">{{$thread->owner->name . " "}}</a>posted:
+                    
+                <div class="level">
+                    <span class="flex">
+                        <a href="">{{$thread->owner->name . " "}}</a>posted:
                     {{ $thread->title }}
+                    </span>
+
+                    <span>{{$thread->created_at->diffForHumans()}}</span>
                 </div>
+                 </div>
 
             <div class="panel-body">
                 {{ $thread->body }}
-            </div>
+           
          </div>
 
 
+
 @endforeach
+{{$threads->links()}}
 </div>
 @endsection
