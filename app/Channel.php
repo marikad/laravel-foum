@@ -6,15 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Channel extends Model
 {
-	protected $guarded = [];
-	
-    public function getRouteKeyName() 
+    /**
+     * Get the route key name for Laravel.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
     {
-    	return 'slug';
+        return 'slug';
     }
 
-    public function threads() 
+    /**
+     * A channel consists of threads.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function threads()
     {
-    	return $this->hasMany(Thread::class);
+        return $this->hasMany(Thread::class);
     }
 }

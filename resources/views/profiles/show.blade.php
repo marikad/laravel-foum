@@ -1,37 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container">
-<div class="page-header">
-    <h1>{{$profileUser->name}}</h1>
-    <small>Since {{$profileUser->created_at->diffForHumans()}}</small>
-</div>
-
-@foreach($threads as $thread)
-
-<div class="panel panel-default">
-                <div class="panel-heading">
-
-                    
-                <div class="level">
-                    <span class="flex">
-                        <a href="">{{$thread->owner->name . " "}}</a>posted:
-                    {{ $thread->title }}
-                    </span>
-
-                    <span>{{$thread->created_at->diffForHumans()}}</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="page-header">
+                    <avatar-form :user="{{ $profileUser }}"></avatar-form>
                 </div>
-                 </div>
 
-            <div class="panel-body">
-                {{ $thread->body }}
-           
-         </div>
+                @forelse ($activities as $date => $activity)
+                    <h3 class="page-header">{{ $date }}</h3>
 
-
-
-@endforeach
-{{$threads->links()}}
-</div>
+                    @foreach ($activity as $record)
+                        @if (view()->exists("profiles.activities.{$record->type}"))
+                            @include ("profiles.activities.{$record->type}", ['activity' => $record])
+                        @endif
+                    @endforeach
+                @empty
+                    <p>There is no activity for this user yet.</p>
+                @endforelse
+            </div>
+        </div>
+    </div>
 @endsection
